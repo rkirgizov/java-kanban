@@ -56,7 +56,7 @@ public class Main {
         taskManager.removeTask(task2.getId());
         printAllTasks(taskManager);
 
-        System.out.println("Удаляем 'эпик' '" + epic2.getTitle() + "'");
+        System.out.println("Удаляем эпик '" + epic2.getTitle() + "'");
         taskManager.removeEpic(epic2.getId());
         printAllEpics(taskManager);
 
