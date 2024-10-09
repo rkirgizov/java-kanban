@@ -1,3 +1,7 @@
+package com.rkigrizov.practicum.model;
+
+import com.rkigrizov.practicum.dict.Status;
+
 import java.util.Objects;
 
 public class Task {
@@ -19,6 +23,18 @@ public class Task {
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Status getStatus() {
@@ -53,7 +69,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "com.rkigrizov.practicum.model.Task{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +

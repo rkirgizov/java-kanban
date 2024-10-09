@@ -1,21 +1,22 @@
-public class SubTask extends Task {
-    private int epicId;
+package com.rkigrizov.practicum.model;
 
-    public SubTask(String title, String description) {
+public class SubTask extends Task {
+    private final int epicId;
+
+    public SubTask(String title, String description, int epicId) {
         super(title, description);
+        this.epicId = epicId;
     }
 
     public int getEpicId() {
         return epicId;
     }
 
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
-    }
+
 
     @Override
     public String toString() {
-        return "SubTask{" +
+        return "com.rkigrizov.practicum.model.SubTask{" +
                 "epicId=" + epicId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +

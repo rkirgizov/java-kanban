@@ -1,18 +1,25 @@
+package com.rkigrizov.practicum.service;
+
+import com.rkigrizov.practicum.dict.Status;
+import com.rkigrizov.practicum.model.Epic;
+import com.rkigrizov.practicum.model.SubTask;
+import com.rkigrizov.practicum.model.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
-    private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, Epic> epics;
-    private HashMap<Integer, SubTask> subTasks;
+    private final HashMap<Integer, Task> tasks;
+    private final HashMap<Integer, Epic> epics;
+    private final HashMap<Integer, SubTask> subTasks;
 
-    TaskManager() {
+    public TaskManager() {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subTasks = new HashMap<>();
     }
 
-    // Методы Task
+    // Методы com.rkigrizov.practicum.model.Task
     public ArrayList<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
@@ -32,7 +39,7 @@ public class TaskManager {
         tasks.remove(id);
     }
 
-    // Методы Epic
+    // Методы com.rkigrizov.practicum.model.Epic
     public ArrayList<Epic> getAllEpics() {
         return new ArrayList<>(epics.values());
     }
@@ -47,30 +54,27 @@ public class TaskManager {
         epics.put(epic.getId(), epic);
     }
     public void updateEpic(Epic epic) {
-        epics.put(epic.getId(), epic);
-        updateStatus(epic);
+        final Epic oldEpic = epics.get(epic.getId());
+
+        oldEpic.setTitle(epic.getTitle());
+        oldEpic.setDescription(epic.getDescription());
     }
     public void removeEpic(int id) {
-        for (SubTask subTask : subTasks.values()) {
-            if (subTask.getEpicId() == id) {
-                subTasks.remove(subTask);
-            }
+        for (Integer subTaskId : getEpicById(id).getSubTasksId()) {
+            subTasks.remove(subTaskId);
         }
         epics.remove(id);
     }
-    public ArrayList<SubTask> getAllSubtasksOfEpic(Epic epic) {
-        int epicId= epic.getId();
+    public ArrayList<SubTask> getAllSubtasksOfEpic(int id) {
         ArrayList<SubTask> arrSubtasks = new ArrayList<>();
 
-        for (SubTask subTask : subTasks.values()) {
-            if (epicId == subTask.getEpicId()) {
-                arrSubtasks.add(subTask);
-            }
+        for (Integer subTaskId : getEpicById(id).getSubTasksId()) {
+            arrSubtasks.add(getSubtaskById(subTaskId));
         }
         return arrSubtasks;
     }
 
-    // Методы SubTask
+    // Методы com.rkigrizov.practicum.model.SubTask
     public ArrayList<SubTask> getAllSubtasks() {
         return new ArrayList<>(subTasks.values());
     }
@@ -96,17 +100,16 @@ public class TaskManager {
         updateStatus(epic);
     }
     public void removeSubTask(int id) {
-        SubTask subTask = subTasks.get(id);
+        SubTask subTask = subTasks.remove(id);
         Epic epic = epics.get(subTask.getEpicId());
 
         epic.getSubTasksId().remove(Integer.valueOf(id));
-        subTasks.remove(id);
         updateStatus(epic);
     }
 
     // Обновление статуса эпика
     private void updateStatus(Epic epic) {
-        ArrayList<SubTask> subTasksForCheck = getAllSubtasksOfEpic(epic);
+        ArrayList<SubTask> subTasksForCheck = getAllSubtasksOfEpic(epic.getId());
         if (subTasksForCheck.isEmpty()) {
             epic.setStatus(Status.NEW);
             return;
@@ -115,6 +118,10 @@ public class TaskManager {
         boolean isDone = true;
         boolean isNew = true;
         for (SubTask subTask : subTasksForCheck) {
+            if (subTask.getStatus() == Status.IN_PROGRESS) {
+                epic.setStatus(Status.IN_PROGRESS);
+                return;
+            }
             if (subTask.getStatus() != Status.DONE) {
                 isDone = false;
             } else if (subTask.getStatus() != Status.NEW) {

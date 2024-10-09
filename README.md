@@ -2,7 +2,7 @@
 Repository for homework project.
 
 # Трекер задач
-Финальный проект 4 спринта курса Java Разработчик Yandex Practicum.
+Финальный проект 4-? спринта курса Java Разработчик Yandex Practicum.
 
 ## Структура задач
 Id задач формируются на основе хэшкода.

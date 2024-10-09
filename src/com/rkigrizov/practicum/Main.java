@@ -1,3 +1,11 @@
+package com.rkigrizov.practicum;
+
+import com.rkigrizov.practicum.dict.Status;
+import com.rkigrizov.practicum.model.Epic;
+import com.rkigrizov.practicum.model.SubTask;
+import com.rkigrizov.practicum.model.Task;
+import com.rkigrizov.practicum.service.TaskManager;
+
 import java.util.ArrayList;
 
 public class Main {
@@ -18,17 +26,14 @@ public class Main {
         // Эпик с двумя подзадачами
         Epic epic1 = new Epic("Выбраться на природу", "Организоваться и выбраться с друзьями куда-нибудь на природу");
         taskManager.createEpic(epic1);
-        SubTask subTask1 = new SubTask("Купить продукты", "Закупиться продуктами для похода");
-        subTask1.setEpicId(epic1.getId());
+        SubTask subTask1 = new SubTask("Купить продукты", "Закупиться продуктами для похода", epic1.getId());
         taskManager.createSubTask(subTask1);
-        SubTask subTask2 = new SubTask("Заправиться", "Заправить полный бак автомобиля");
-        subTask2.setEpicId(epic1.getId());
+        SubTask subTask2 = new SubTask("Заправиться", "Заправить полный бак автомобиля", epic1.getId());
         taskManager.createSubTask(subTask2);
         // Эпик с одной подзадачей
         Epic epic2 = new Epic("Саморазвиться", "Пора взять себя в руки");
         taskManager.createEpic(epic2);
-        SubTask subTask3 = new SubTask("Первым делом", "Так, надо придумать чем заняться, чтобы и не грустно, и полезно");
-        subTask3.setEpicId(epic2.getId());
+        SubTask subTask3 = new SubTask("Первым делом", "Так, надо придумать чем заняться, чтобы и не грустно, и полезно", epic2.getId());
         taskManager.createSubTask(subTask3);
 
         // Распечатайте списки эпиков, задач и подзадач
@@ -43,10 +48,10 @@ public class Main {
         System.out.println(taskManager.getTaskById(task2.getId()));
         System.out.println(" ");
 
-        System.out.println("Изменяем статусы подзадач: '" + subTask1.getTitle() + "' на IN_PROGRESS, '" + subTask2.getTitle() + "' на DONE, '" + subTask3.getTitle() + "' на DONE");
+        System.out.println("Изменяем статусы подзадач: '" + subTask1.getTitle() + "' на IN_PROGRESS, '" + subTask2.getTitle() + "' на IN_PROGRESS, '" + subTask3.getTitle() + "' на DONE");
         subTask1.setStatus(Status.IN_PROGRESS);
         taskManager.updateSubtask(subTask1);
-        subTask2.setStatus(Status.DONE);
+        subTask2.setStatus(Status.IN_PROGRESS);
         taskManager.updateSubtask(subTask1);
         subTask3.setStatus(Status.DONE);
         taskManager.updateSubtask(subTask3);
@@ -68,7 +73,7 @@ public class Main {
         System.out.println("Эпики с подзадачами: ");
         for (Epic epic : taskManager.getAllEpics()) {
             System.out.println(epic.toString());
-            ArrayList<SubTask> subTasksForPrint = taskManager.getAllSubtasksOfEpic(epic);
+            ArrayList<SubTask> subTasksForPrint = taskManager.getAllSubtasksOfEpic(epic.getId());
             if (!subTasksForPrint.isEmpty()) {
                 for (SubTask subTask : subTasksForPrint) {
                     System.out.println("  " + subTask.toString());

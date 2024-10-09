@@ -1,6 +1,8 @@
+package com.rkigrizov.practicum.model;
+
 import java.util.ArrayList;
 
-public class Epic extends Task{
+public class Epic extends Task {
     private final ArrayList<Integer> subTasksId;
 
     public Epic(String title, String description) {
@@ -14,7 +16,7 @@ public class Epic extends Task{
 
     @Override
     public String toString() {
-        return "Epic{" +
+        return "com.rkigrizov.practicum.model.Epic{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
