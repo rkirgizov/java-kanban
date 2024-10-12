@@ -4,16 +4,18 @@ import com.rkigrizov.practicum.dict.Status;
 import com.rkigrizov.practicum.model.Epic;
 import com.rkigrizov.practicum.model.SubTask;
 import com.rkigrizov.practicum.model.Task;
-import com.rkigrizov.practicum.service.TaskManager;
+import com.rkigrizov.practicum.service.impl.HistoryManagerImpl;
+import com.rkigrizov.practicum.service.impl.TaskManagerImpl;
 
 import java.util.ArrayList;
 
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
-
-        System.out.println("Начинаем тестирование!\n");
+        TaskManagerImpl taskManager = new TaskManagerImpl();
+        HistoryManagerImpl historyManager = taskManager.getHistoryManager ();
+        System.out.println("Начинаем тестирование!");
+        System.out.println(" ");
 
         // Тесты
 
@@ -38,14 +40,19 @@ public class Main {
 
         // Распечатайте списки эпиков, задач и подзадач
         printAllEpics(taskManager);
+        System.out.println("В истории просмотров - " + historyManager.getHistory().size() + " задач, последняя просмотренная ID " + historyManager.getHistory().getLast().getId());
+        System.out.println(" ");
         printAllTasks(taskManager);
+        System.out.println("В истории просмотров - " + historyManager.getHistory().size() + " задач, последняя просмотренная ID " + historyManager.getHistory().getLast().getId());
+        System.out.println(" ");
 
         // Измените статусы созданных объектов, распечатайте их. Проверьте, что статус задачи и подзадачи сохранился, а статус эпика рассчитался по статусам подзадач.
         System.out.println("Изменяем статусы задач: '" + task1.getTitle() + "' на DONE, '" + task2.getTitle() + "' на IN_PROGRESS");
         task1.setStatus(Status.DONE);
         task2.setStatus(Status.IN_PROGRESS);
-        System.out.println(taskManager.getTaskById(task1.getId()));
-        System.out.println(taskManager.getTaskById(task2.getId()));
+        System.out.println(taskManager.getTaskById(task1.getId(), true));
+        System.out.println(taskManager.getTaskById(task2.getId(), true));
+        System.out.println("В истории просмотров - " + historyManager.getHistory().size() + " задач, последняя просмотренная ID " + historyManager.getHistory().getLast().getId());
         System.out.println(" ");
 
         System.out.println("Изменяем статусы подзадач: '" + subTask1.getTitle() + "' на IN_PROGRESS, '" + subTask2.getTitle() + "' на IN_PROGRESS, '" + subTask3.getTitle() + "' на DONE");
@@ -56,24 +63,30 @@ public class Main {
         subTask3.setStatus(Status.DONE);
         taskManager.updateSubtask(subTask3);
         printAllEpics(taskManager);
+        System.out.println("В истории просмотров - " + historyManager.getHistory().size() + " задач, последняя просмотренная ID " + historyManager.getHistory().getLast().getId());
+        System.out.println(" ");
 
         System.out.println("Удаляем задачу '" + task2.getTitle() + "'");
         taskManager.removeTask(task2.getId());
         printAllTasks(taskManager);
+        System.out.println("В истории просмотров - " + historyManager.getHistory().size() + " задач, последняя просмотренная ID " + historyManager.getHistory().getLast().getId());
+        System.out.println(" ");
 
         System.out.println("Удаляем эпик '" + epic2.getTitle() + "'");
         taskManager.removeEpic(epic2.getId());
         printAllEpics(taskManager);
+        System.out.println("В истории просмотров - " + historyManager.getHistory().size() + " задач, последняя просмотренная ID " + historyManager.getHistory().getLast().getId());
+        System.out.println(" ");
 
         System.out.println("Тестирование завершено!");
 
     }
 
-    private static void printAllEpics (TaskManager taskManager) {
+    private static void printAllEpics (TaskManagerImpl taskManager) {
         System.out.println("Эпики с подзадачами: ");
-        for (Epic epic : taskManager.getAllEpics()) {
+        for (Epic epic : taskManager.getAllEpics(true)) {
             System.out.println(epic.toString());
-            ArrayList<SubTask> subTasksForPrint = taskManager.getAllSubtasksOfEpic(epic.getId());
+            ArrayList<SubTask> subTasksForPrint = taskManager.getAllSubtasksOfEpic(epic.getId(),true);
             if (!subTasksForPrint.isEmpty()) {
                 for (SubTask subTask : subTasksForPrint) {
                     System.out.println("  " + subTask.toString());
@@ -82,15 +95,13 @@ public class Main {
                 System.out.println("  В этом эпике ещё нет подзадач");
             }
         }
-        System.out.println(" ");
     }
 
-    private static void printAllTasks (TaskManager taskManager) {
+    private static void printAllTasks (TaskManagerImpl taskManager) {
         System.out.println("Обычные задачи: ");
-        for (Task task : taskManager.getAllTasks()) {
+        for (Task task : taskManager.getAllTasks(true)) {
             System.out.println(task.toString());
         }
-        System.out.println(" ");
     }
 
 }
