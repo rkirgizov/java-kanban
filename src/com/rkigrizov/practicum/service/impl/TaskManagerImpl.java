@@ -4,30 +4,26 @@ import com.rkigrizov.practicum.dict.Status;
 import com.rkigrizov.practicum.model.Epic;
 import com.rkigrizov.practicum.model.SubTask;
 import com.rkigrizov.practicum.model.Task;
-import com.rkigrizov.practicum.service.EpicManager;
-import com.rkigrizov.practicum.service.SubTaskManager;
+import com.rkigrizov.practicum.service.HistoryManager;
 import com.rkigrizov.practicum.service.TaskManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TaskManagerImpl implements TaskManager, EpicManager, SubTaskManager {
+public class TaskManagerImpl implements TaskManager {
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, SubTask> subTasks;
-    HistoryManagerImpl historyManager = new HistoryManagerImpl();
+    private final HistoryManager historyManager;
 
-    public TaskManagerImpl() {
+    public TaskManagerImpl(HistoryManager historyManager) {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subTasks = new HashMap<>();
+        this.historyManager = historyManager;
     }
 
-    public HistoryManagerImpl getHistoryManager () {
-        return historyManager;
-    }
-
-    // Методы TaskManager
+    // Методы Task
     @Override
     public ArrayList<Task> getAllTasks(boolean needHistory) {
         if (needHistory) {
@@ -61,7 +57,7 @@ public class TaskManagerImpl implements TaskManager, EpicManager, SubTaskManager
         tasks.remove(id);
     }
 
-    // Методы EpicManager
+    // Методы Epic
     @Override
     public ArrayList<Epic> getAllEpics(boolean needHistory) {
         if (needHistory) {
@@ -141,7 +137,7 @@ public class TaskManagerImpl implements TaskManager, EpicManager, SubTaskManager
         }
     }
 
-    // Методы SubTaskManager
+    // Методы SubTask
     @Override
     public ArrayList<SubTask> getAllSubtasks(boolean needHistory) {
         if (needHistory) {
@@ -189,7 +185,5 @@ public class TaskManagerImpl implements TaskManager, EpicManager, SubTaskManager
         epic.getSubTasksId().remove(Integer.valueOf(id));
         updateStatusEpic(epic);
     }
-
-
 
 }

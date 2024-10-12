@@ -4,16 +4,18 @@ import com.rkigrizov.practicum.dict.Status;
 import com.rkigrizov.practicum.model.Epic;
 import com.rkigrizov.practicum.model.SubTask;
 import com.rkigrizov.practicum.model.Task;
-import com.rkigrizov.practicum.service.impl.HistoryManagerImpl;
-import com.rkigrizov.practicum.service.impl.TaskManagerImpl;
+import com.rkigrizov.practicum.service.HistoryManager;
+import com.rkigrizov.practicum.service.TaskManager;
+import com.rkigrizov.practicum.util.Managers;
 
 import java.util.ArrayList;
 
 public class Main {
 
     public static void main(String[] args) {
-        TaskManagerImpl taskManager = new TaskManagerImpl();
-        HistoryManagerImpl historyManager = taskManager.getHistoryManager ();
+        Managers managers = new Managers();
+        TaskManager taskManager = managers.getDefaultManager();
+        HistoryManager historyManager = managers.getHistoryManager();
         System.out.println("Начинаем тестирование!");
         System.out.println(" ");
 
@@ -82,7 +84,7 @@ public class Main {
 
     }
 
-    private static void printAllEpics (TaskManagerImpl taskManager) {
+    private static void printAllEpics (TaskManager taskManager) {
         System.out.println("Эпики с подзадачами: ");
         for (Epic epic : taskManager.getAllEpics(true)) {
             System.out.println(epic.toString());
@@ -97,7 +99,7 @@ public class Main {
         }
     }
 
-    private static void printAllTasks (TaskManagerImpl taskManager) {
+    private static void printAllTasks (TaskManager taskManager) {
         System.out.println("Обычные задачи: ");
         for (Task task : taskManager.getAllTasks(true)) {
             System.out.println(task.toString());
