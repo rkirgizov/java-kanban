@@ -1,6 +1,6 @@
-package com.rkigrizov.practicum.model;
+package com.rkirgizov.practicum.model;
 
-import com.rkigrizov.practicum.dict.Status;
+import com.rkirgizov.practicum.dict.Status;
 
 import java.util.Objects;
 
@@ -15,6 +15,14 @@ public class Task {
         this.description = description;
         this.status = Status.NEW;
         this.id = hashCode();
+    }
+
+    // Перегрузка конструктора для обновления
+    public Task(int taskId, String title, String description, Status status) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.id = taskId;
     }
 
     public int getId() {

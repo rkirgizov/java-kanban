@@ -1,5 +1,6 @@
-package com.rkigrizov.practicum.model;
+package com.rkirgizov.practicum.model;
 
+import com.rkirgizov.practicum.dict.Status;
 import java.util.Objects;
 
 public class SubTask extends Task {
@@ -9,6 +10,11 @@ public class SubTask extends Task {
         super(title, description);
         this.epicId = epicId;
         this.id = hashCode(); // назначаем Id на основе хэшкода с учётом epicId
+    }
+    // Перегрузка конструктора для обновления
+    public SubTask(int subTaskId, String title, String description, Status status, int epicId) {
+        super(subTaskId, title, description, status);
+        this.epicId = epicId;
     }
 
     public int getEpicId() {

@@ -1,4 +1,4 @@
-package com.rkigrizov.practicum.dict;
+package com.rkirgizov.practicum.dict;
 
 public enum Status {
     NEW,

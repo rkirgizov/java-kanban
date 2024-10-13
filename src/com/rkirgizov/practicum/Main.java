@@ -1,21 +1,20 @@
-package com.rkigrizov.practicum;
+package com.rkirgizov.practicum;
 
-import com.rkigrizov.practicum.dict.Status;
-import com.rkigrizov.practicum.model.Epic;
-import com.rkigrizov.practicum.model.SubTask;
-import com.rkigrizov.practicum.model.Task;
-import com.rkigrizov.practicum.service.HistoryManager;
-import com.rkigrizov.practicum.service.TaskManager;
-import com.rkigrizov.practicum.util.Managers;
-
-import java.util.ArrayList;
+import com.rkirgizov.practicum.dict.Status;
+import com.rkirgizov.practicum.model.Epic;
+import com.rkirgizov.practicum.model.SubTask;
+import com.rkirgizov.practicum.model.Task;
+import com.rkirgizov.practicum.service.HistoryManager;
+import com.rkirgizov.practicum.service.TaskManager;
+import com.rkirgizov.practicum.util.Managers;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        Managers managers = new Managers();
-        TaskManager taskManager = managers.getDefaultManager();
-        HistoryManager historyManager = managers.getHistoryManager();
+
+        TaskManager taskManager = Managers.getDefault();
+        HistoryManager historyManager = taskManager.getHistoryManager();
         System.out.println("Начинаем тестирование!");
         System.out.println(" ");
 
@@ -78,14 +77,13 @@ public class Main {
         System.out.println(" ");
 
         System.out.println("Тестирование завершено!");
-
     }
 
     private static void printAllEpics (TaskManager taskManager) {
         System.out.println("Эпики с подзадачами: ");
         for (Epic epic : taskManager.getAllEpics(true)) {
             System.out.println(epic.toString());
-            ArrayList<SubTask> subTasksForPrint = taskManager.getAllSubtasksOfEpic(epic.getId(),true);
+            List<SubTask> subTasksForPrint = taskManager.getAllSubtasksOfEpic(epic.getId(),true);
             if (!subTasksForPrint.isEmpty()) {
                 for (SubTask subTask : subTasksForPrint) {
                     System.out.println("  " + subTask.toString());

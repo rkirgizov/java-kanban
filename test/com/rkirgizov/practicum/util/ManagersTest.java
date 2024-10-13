@@ -1,6 +1,7 @@
-import com.rkigrizov.practicum.service.HistoryManager;
-import com.rkigrizov.practicum.service.TaskManager;
-import com.rkigrizov.practicum.util.Managers;
+package com.rkirgizov.practicum.util;
+
+import com.rkirgizov.practicum.service.HistoryManager;
+import com.rkirgizov.practicum.service.TaskManager;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,10 +13,9 @@ public class ManagersTest {
         TaskManager taskManager;
         HistoryManager historyManager;
         for (int i = 0; i < 5; i++) {
-            Managers managers = new Managers();
-            taskManager = managers.getDefaultManager();
-            historyManager = managers.getHistoryManager();
-            if (taskManager != null && historyManager != null) count++;
+            taskManager = Managers.getDefault();
+            historyManager = taskManager.getHistoryManager();
+            if (historyManager != null) count++;
         }
         assertEquals(5, count, "Не все из 5 итераций создания менеджеров прошли успешно.");
     }
