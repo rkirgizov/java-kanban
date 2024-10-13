@@ -23,7 +23,16 @@ public class TaskManagerImpl implements TaskManager {
         this.historyManager = historyManager;
     }
 
+    public <T extends Task> void updateStatus (T task, Status status) {
+        task.setStatus(status);
+        if (task instanceof SubTask) this.updateStatusEpic(((SubTask) task).getEpicId());
+    }
+
     // Методы Task
+    @Override
+    public int getTaskId(Task task) {
+        return task.getId();
+    }
     @Override
     public ArrayList<Task> getAllTasks(boolean needHistory) {
         if (needHistory) {
@@ -49,8 +58,9 @@ public class TaskManagerImpl implements TaskManager {
         tasks.put(task.getId(), task);
     }
     @Override
-    public void updateTask(Task task) {
-        tasks.put(task.getId(), task);
+    public void updateTask(int idForUpdate, Task task) {
+        task.setId(idForUpdate);
+        tasks.put(idForUpdate, task);
     }
     @Override
     public void removeTask(int id) {
@@ -85,11 +95,9 @@ public class TaskManagerImpl implements TaskManager {
         epics.put(epic.getId(), epic);
     }
     @Override
-    public void updateEpic(Epic epic) {
-        final Epic oldEpic = epics.get(epic.getId());
-
-        oldEpic.setTitle(epic.getTitle());
-        oldEpic.setDescription(epic.getDescription());
+    public void updateEpic(int idForUpdate, Epic epic) {
+        epic.setId(idForUpdate);
+        tasks.put(epic.getId(), epic);
     }
     @Override
     public void removeEpic(int id) {
@@ -107,8 +115,9 @@ public class TaskManagerImpl implements TaskManager {
         return arrSubtasks;
     }
     @Override
-    public void updateStatusEpic(Epic epic) {
-        ArrayList<SubTask> subTasksForCheck = getAllSubtasksOfEpic(epic.getId(), false);
+    public void updateStatusEpic(int epicId) {
+        Epic epic = this.getEpicById(epicId, false);
+        ArrayList<SubTask> subTasksForCheck = getAllSubtasksOfEpic(epicId, false);
         if (subTasksForCheck.isEmpty()) {
             epic.setStatus(Status.NEW);
             return;
@@ -139,24 +148,6 @@ public class TaskManagerImpl implements TaskManager {
 
     // Методы SubTask
     @Override
-    public ArrayList<SubTask> getAllSubtasks(boolean needHistory) {
-        if (needHistory) {
-            for (Task task : subTasks.values()) {
-                historyManager.addHistory(task);
-            }
-        }
-        return new ArrayList<>(subTasks.values());
-    }
-
-    @Override
-    public void removeAllSubTasks() {
-        for (Epic epic : epics.values()) {
-            epic.getSubTasksId().clear();
-            epic.setStatus(Status.NEW);
-        }
-        subTasks.clear();
-    }
-    @Override
     public SubTask getSubtaskById(int id, boolean needHistory) {
         if (needHistory) {
             historyManager.addHistory(subTasks.get(id));
@@ -166,24 +157,29 @@ public class TaskManagerImpl implements TaskManager {
 
     @Override
     public void createSubTask(SubTask subTask) {
+        int epicId = subTask.getEpicId();
         subTasks.put(subTask.getId(), subTask);
-        Epic epic = epics.get(subTask.getEpicId());
+        Epic epic = epics.get(epicId);
         epic.getSubTasksId().add(subTask.getId());
-        updateStatusEpic(epic);
+        updateStatusEpic(epicId);
     }
     @Override
-    public void updateSubtask(SubTask subTask) {
+    public void updateSubtask(int idForUpdate, SubTask subTask) {
+        subTask.setId(idForUpdate);
         subTasks.put(subTask.getId(), subTask);
-        Epic epic = epics.get(subTask.getEpicId());
-        updateStatusEpic(epic);
+        SubTask updatedSubTask = this.getSubtaskById(idForUpdate,false);
+        int epicId = updatedSubTask.getEpicId();
+        updateStatusEpic(epicId);
     }
+
     @Override
     public void removeSubTask(int id) {
         SubTask subTask = subTasks.remove(id);
-        Epic epic = epics.get(subTask.getEpicId());
+        int epicId = subTask.getEpicId();
+        Epic epic = epics.get(epicId);
 
         epic.getSubTasksId().remove(Integer.valueOf(id));
-        updateStatusEpic(epic);
+        updateStatusEpic(epicId);
     }
 
 }

@@ -15,16 +15,23 @@ public class HistoryManagerImpl implements HistoryManager {
 
     @Override
     public void addHistory(Task task) {
-        if (history.size() == LIMIT) {
-            history.removeFirst();
-            history.add(task);
-        } else {
-            history.add(task);
-        }
+        if (history.size() == LIMIT) history.removeFirst();
+        history.add(task);
     }
 
     @Override
     public ArrayList<Task> getHistory() {
         return history;
     }
+
+    @Override
+    public int getCurrentHistoryCount() {
+        return history.size();
+    }
+
+    @Override
+    public int getCurrentHistoryLimit() {
+        return LIMIT;
+    }
+
 }

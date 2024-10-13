@@ -21,6 +21,10 @@ public class Task {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -50,7 +54,8 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(title, task.title) && Objects.equals(description, task.description) && status == task.status;
+        if (id == task.id) return true;
+        return Objects.equals(title, task.title) && Objects.equals(description, task.description) && status == task.status;
     }
 
     @Override
@@ -69,7 +74,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "com.rkigrizov.practicum.model.Task{" +
+        return "Task{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +

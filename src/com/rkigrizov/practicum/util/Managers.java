@@ -6,10 +6,11 @@ import com.rkigrizov.practicum.service.impl.HistoryManagerImpl;
 import com.rkigrizov.practicum.service.impl.TaskManagerImpl;
 
 public class Managers {
+    HistoryManager historyManager;
     TaskManager defaultManager;
-    HistoryManager historyManager = new HistoryManagerImpl();
 
     public Managers() {
+        this.historyManager = new HistoryManagerImpl();
         this.defaultManager = new TaskManagerImpl(historyManager);
     }
 

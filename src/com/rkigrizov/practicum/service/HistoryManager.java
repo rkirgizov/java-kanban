@@ -7,5 +7,6 @@ public interface HistoryManager {
 
     void addHistory(Task task);
     ArrayList<Task> getHistory();
-
+    int getCurrentHistoryCount();
+    int getCurrentHistoryLimit();
 }

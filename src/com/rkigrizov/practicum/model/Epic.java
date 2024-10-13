@@ -16,7 +16,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "com.rkigrizov.practicum.model.Epic{" +
+        return "Epic{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +

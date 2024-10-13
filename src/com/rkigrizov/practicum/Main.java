@@ -50,20 +50,17 @@ public class Main {
 
         // Измените статусы созданных объектов, распечатайте их. Проверьте, что статус задачи и подзадачи сохранился, а статус эпика рассчитался по статусам подзадач.
         System.out.println("Изменяем статусы задач: '" + task1.getTitle() + "' на DONE, '" + task2.getTitle() + "' на IN_PROGRESS");
-        task1.setStatus(Status.DONE);
-        task2.setStatus(Status.IN_PROGRESS);
+        taskManager.updateStatus(task1, Status.DONE);
+        taskManager.updateStatus(task2, Status.IN_PROGRESS);
         System.out.println(taskManager.getTaskById(task1.getId(), true));
         System.out.println(taskManager.getTaskById(task2.getId(), true));
         System.out.println("В истории просмотров - " + historyManager.getHistory().size() + " задач, последняя просмотренная ID " + historyManager.getHistory().getLast().getId());
         System.out.println(" ");
 
         System.out.println("Изменяем статусы подзадач: '" + subTask1.getTitle() + "' на IN_PROGRESS, '" + subTask2.getTitle() + "' на IN_PROGRESS, '" + subTask3.getTitle() + "' на DONE");
-        subTask1.setStatus(Status.IN_PROGRESS);
-        taskManager.updateSubtask(subTask1);
-        subTask2.setStatus(Status.IN_PROGRESS);
-        taskManager.updateSubtask(subTask1);
-        subTask3.setStatus(Status.DONE);
-        taskManager.updateSubtask(subTask3);
+        taskManager.updateStatus(subTask1, Status.IN_PROGRESS);
+        taskManager.updateStatus(subTask2, Status.IN_PROGRESS);
+        taskManager.updateStatus(subTask3, Status.DONE);
         printAllEpics(taskManager);
         System.out.println("В истории просмотров - " + historyManager.getHistory().size() + " задач, последняя просмотренная ID " + historyManager.getHistory().getLast().getId());
         System.out.println(" ");
