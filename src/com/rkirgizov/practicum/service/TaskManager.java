@@ -1,6 +1,5 @@
 package com.rkirgizov.practicum.service;
 
-import com.rkirgizov.practicum.dict.Status;
 import com.rkirgizov.practicum.model.Epic;
 import com.rkirgizov.practicum.model.SubTask;
 import com.rkirgizov.practicum.model.Task;
@@ -8,30 +7,28 @@ import java.util.List;
 
 public interface TaskManager {
 
-    HistoryManager getHistoryManager();
-    <T extends Task> void updateStatus (T task, Status status);
+    List<Task> getHistory();
 
-    List<Task> getAllTasks(boolean needHistory);
+    List<Task> getAllTasks();
     void removeAllTasks();
-    Task getTaskById(int id, boolean needHistory);
+    Task getTaskById(int id);
     void createTask(Task task);
     void updateTask(Task task);
-    void removeTask(int id);
+    void removeTask(Task task);
 
     List<SubTask> getAllSubtasks();
     void removeAllSubTasks();
-    SubTask getSubtaskById(int id, boolean needHistory);
+    SubTask getSubtaskById(int id);
     void createSubTask(SubTask subTask);
     void updateSubtask(SubTask subTask);
-    void removeSubTask(int id);
+    void removeSubTask(SubTask subTask);
 
-    List<Epic> getAllEpics(boolean needHistory);
+    List<Epic> getAllEpics();
     void removeAllEpics();
-    Epic getEpicById(int id, boolean needHistory);
+    Epic getEpicById(int id);
     void createEpic(Epic epic);
     void updateEpic(Epic epic);
-    void removeEpic(int id);
-    List<SubTask> getAllSubtasksOfEpic(int id, boolean needHistory);
-    void updateStatusEpic(int epicId);
+    void removeEpic(Epic epic);
+    List<SubTask> getAllSubtasksOfEpic(int id);
 
 }
