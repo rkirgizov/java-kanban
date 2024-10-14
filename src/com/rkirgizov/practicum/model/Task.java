@@ -1,7 +1,6 @@
 package com.rkirgizov.practicum.model;
 
 import com.rkirgizov.practicum.dict.Status;
-
 import java.util.Objects;
 
 public class Task {

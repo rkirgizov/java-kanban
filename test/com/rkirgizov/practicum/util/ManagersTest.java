@@ -1,23 +1,24 @@
 package com.rkirgizov.practicum.util;
 
-import com.rkirgizov.practicum.service.HistoryManager;
+import com.rkirgizov.practicum.model.Task;
 import com.rkirgizov.practicum.service.TaskManager;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ManagersTest {
 
     @Test
     void managersAlwaysValid() {
-        int count = 0;
         TaskManager taskManager;
-        HistoryManager historyManager;
+        List<Task> history;
         for (int i = 0; i < 5; i++) {
             taskManager = Managers.getDefault();
-            historyManager = taskManager.getHistoryManager();
-            if (historyManager != null) count++;
+            history = taskManager.getHistory();
+
+            assertNotNull(taskManager, "На итерации " + (i+1) + " не создался менеджер задач.");
+            assertNotNull(history, "На итерации " + (i+1) + " не инициализировалась история.");
         }
-        assertEquals(5, count, "Не все из 5 итераций создания менеджеров прошли успешно.");
     }
 
 }
