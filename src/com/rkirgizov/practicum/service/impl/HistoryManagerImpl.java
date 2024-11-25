@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HistoryManagerImpl <T extends Task> implements HistoryManager  <T> {
+public class HistoryManagerImpl<T extends Task> implements HistoryManager<T> {
     private final Map<Integer, Node<T>> history = new HashMap<>();
     private Node<T> first;
     private Node<T> last;
