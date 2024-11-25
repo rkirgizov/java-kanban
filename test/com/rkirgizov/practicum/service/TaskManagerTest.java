@@ -59,9 +59,10 @@ public class TaskManagerTest {
     void updatingWorkCorrectly() {
         Task task1 = new Task("Test Task 1", "Test Task Description");
         taskManager.createTask(task1);
-        taskManager.updateTask(new Task(task1.getId(), "Test Task Updated", task1.getDescription(), task1.getStatus()));
+        taskManager.updateTask(new Task(task1.getId(), "Test Task Updated", "Test Task Description Updated", task1.getStatus()));
 
-        assertEquals("Test Task Updated", taskManager.getTaskById(task1.getId()).getTitle(), "Задача не обновилась с новым названием.");
+        assertEquals("Test Task Updated", taskManager.getTaskById(task1.getId()).getTitle(), "Название задачи не обновилось.");
+        assertEquals("Test Task Description Updated", taskManager.getTaskById(task1.getId()).getDescription(), "Описание задачи не обновилось.");
 
         Epic epic1 = new Epic("Test Epic 1", "Test Epic Description");
         taskManager.createEpic(epic1);
