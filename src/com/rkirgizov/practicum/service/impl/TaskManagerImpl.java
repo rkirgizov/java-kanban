@@ -38,10 +38,12 @@ public class TaskManagerImpl implements TaskManager {
     public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
+
     @Override
     public void removeAllTasks() {
         tasks.clear();
     }
+
     @Override
     public Task getTaskById(int id) {
         if (tasks.containsKey(id)) {
@@ -52,14 +54,17 @@ public class TaskManagerImpl implements TaskManager {
         }
         return null;
     }
+
     @Override
     public void createTask(Task task) {
         tasks.put(task.getId(), task);
     }
+
     @Override
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
+
     @Override
     public void removeTask(Task task) {
         tasks.remove(task.getId());
@@ -70,11 +75,13 @@ public class TaskManagerImpl implements TaskManager {
     public List<Epic> getAllEpics() {
         return new ArrayList<>(epics.values());
     }
+
     @Override
     public void removeAllEpics() {
         subTasks.clear();
         epics.clear();
     }
+
     @Override
     public Epic getEpicById(int id) {
         if (epics.containsKey(id)) {
@@ -85,14 +92,17 @@ public class TaskManagerImpl implements TaskManager {
         }
         return null;
     }
+
     @Override
     public void createEpic(Epic epic) {
         epics.put(epic.getId(), epic);
     }
+
     @Override
     public void updateEpic(Epic epic) {
         epics.put(epic.getId(), epic);
     }
+
     @Override
     public void removeEpic(Epic epic) {
         for (Integer subTaskId : epic.getSubTasksId()) {
@@ -100,6 +110,7 @@ public class TaskManagerImpl implements TaskManager {
         }
         epics.remove(epic.getId());
     }
+
     @Override
     public List<SubTask> getAllSubtasksOfEpic(int id) {
         List<SubTask> subTasksOfEpic = new ArrayList<>();
@@ -113,6 +124,7 @@ public class TaskManagerImpl implements TaskManager {
     public List<SubTask> getAllSubtasks() {
         return new ArrayList<>(subTasks.values());
     }
+
     public void removeAllSubTasks() {
         for (Epic epic : epics.values()) {
             epic.getSubTasksId().clear();
@@ -120,6 +132,7 @@ public class TaskManagerImpl implements TaskManager {
         }
         subTasks.clear();
     }
+
     @Override
     public SubTask getSubtaskById(int id) {
         if (subTasks.containsKey(id)) {
@@ -130,6 +143,7 @@ public class TaskManagerImpl implements TaskManager {
         }
         return null;
     }
+
     @Override
     public void createSubTask(SubTask subTask) {
         int epicId = subTask.getEpicId();
@@ -138,12 +152,14 @@ public class TaskManagerImpl implements TaskManager {
         epic.getSubTasksId().add(subTask.getId());
         updateStatusEpic(epicId);
     }
+
     @Override
     public void updateSubtask(SubTask subTask) {
         subTasks.put(subTask.getId(), subTask);
         int epicId = subTask.getEpicId();
         updateStatusEpic(epicId);
     }
+
     @Override
     public void removeSubTask(SubTask subTask) {
         int epicId = subTask.getEpicId();
