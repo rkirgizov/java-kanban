@@ -99,7 +99,7 @@ public class Main {
         }
     }
 
-    private static void printAllEpics (TaskManager taskManager) {
+    private static void printAllEpics(TaskManager taskManager) {
         System.out.println("Эпики с подзадачами: ");
         for (Epic epic : taskManager.getAllEpics()) {
             System.out.println(taskManager.getEpicById(epic.getId()));
@@ -114,7 +114,7 @@ public class Main {
         }
     }
 
-    private static void printAllTasks (TaskManager taskManager) {
+    private static void printAllTasks(TaskManager taskManager) {
         System.out.println("Обычные задачи: ");
         for (Task task : taskManager.getAllTasks()) {
             System.out.println(taskManager.getTaskById(task.getId()));

@@ -11,6 +11,7 @@ public class SubTask extends Task {
         this.epicId = epicId;
         this.id = hashCode(); // назначаем Id на основе хэшкода с учётом epicId
     }
+
     // Перегрузка конструктора для обновления
     public SubTask(int subTaskId, String title, String description, Status status, int epicId) {
         super(subTaskId, title, description, status);

@@ -11,6 +11,7 @@ public class Epic extends Task {
         super(title, description);
         subTasksId = new ArrayList<>();
     }
+
     // Перегрузка конструктора для обновления
     public Epic(int epicId, String title, String description, Status status, List<Integer> subTasksId) {
         super(epicId, title, description, status);
