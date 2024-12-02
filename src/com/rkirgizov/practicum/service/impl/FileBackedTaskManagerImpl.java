@@ -149,7 +149,7 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
         Type type = Type.valueOf(values[1]);
         switch (type) {
             case TASK:
-                return new Task (Integer.parseInt(values[0]), values[2], values[4], status);
+                return new Task(Integer.parseInt(values[0]), values[2], values[4], status);
             case EPIC:
                 return new Epic(Integer.parseInt(values[0]), values[2], values[4], status);
             case SUBTASK:
