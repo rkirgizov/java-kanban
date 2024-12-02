@@ -1,13 +1,15 @@
 package com.rkirgizov.practicum.model;
 
 import com.rkirgizov.practicum.dict.Status;
+import com.rkirgizov.practicum.dict.Type;
+
 import java.util.Objects;
 
 public class SubTask extends Task {
     private final int epicId;
 
     public SubTask(String title, String description, int epicId) {
-        super(title, description);
+        super(Type.SUBTASK, title, description);
         this.epicId = epicId;
         this.id = hashCode(); // назначаем Id на основе хэшкода с учётом epicId
     }
@@ -15,6 +17,7 @@ public class SubTask extends Task {
     // Перегрузка конструктора для обновления
     public SubTask(int subTaskId, String title, String description, Status status, int epicId) {
         super(subTaskId, title, description, status);
+        this.type = Type.SUBTASK;
         this.epicId = epicId;
     }
 
@@ -24,24 +27,21 @@ public class SubTask extends Task {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         SubTask subTask = (SubTask) o;
-        if (id == subTask.id) return true;
-        return super.equals(o) && getEpicId() == subTask.getEpicId();
+        if (getId() == subTask.getId()) return true;
+        return getEpicId() == subTask.getEpicId();
     }
 
     @Override
-    public int hashCode() { // для уникального Id с учётом epicId
+    public int hashCode() {
         return Objects.hash(super.hashCode(), getEpicId());
     }
 
     @Override
     public String toString() {
-        return "SubTask{" +
-                "epicId=" + epicId +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+        return String.format("%d,%s,%s,%s,%s,%s",id,type,title,status,description,epicId);
     }
 }

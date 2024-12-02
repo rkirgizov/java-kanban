@@ -11,13 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TaskManagerImpl implements TaskManager {
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, Epic> epics;
-    private final Map<Integer, SubTask> subTasks;
+public class InMemoryTaskManagerImpl implements TaskManager {
+    final Map<Integer, Task> tasks;
+    final Map<Integer, Epic> epics;
+    final Map<Integer, SubTask> subTasks;
     private final HistoryManager<Task> historyManager;
 
-    public TaskManagerImpl(HistoryManager<Task> historyManager) {
+    public InMemoryTaskManagerImpl(HistoryManager<Task> historyManager) {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subTasks = new HashMap<>();

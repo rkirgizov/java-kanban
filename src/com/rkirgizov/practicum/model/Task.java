@@ -1,23 +1,36 @@
 package com.rkirgizov.practicum.model;
 
 import com.rkirgizov.practicum.dict.Status;
+import com.rkirgizov.practicum.dict.Type;
+
 import java.util.Objects;
 
 public class Task {
-    protected String title;
-    protected String description;
     protected int id;
+    protected String title;
+    protected Type type;
+    protected String description;
     protected Status status;
 
     public Task(String title, String description) {
+        this.type = Type.TASK;
         this.title = title;
-        this.description = description;
         this.status = Status.NEW;
+        this.description = description;
+        this.id = hashCode();
+    }
+
+    public Task(Type type, String title, String description) {
+        this.type = type;
+        this.title = title;
+        this.status = Status.NEW;
+        this.description = description;
         this.id = hashCode();
     }
 
     // Перегрузка конструктора для обновления
     public Task(int taskId, String title, String description, Status status) {
+        this.type = Type.TASK;
         this.title = title;
         this.description = description;
         this.status = status;
@@ -30,6 +43,10 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public String getTitle() {
@@ -61,31 +78,17 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        if (id == task.id) return true;
-        return Objects.equals(title, task.title) && Objects.equals(description, task.description) && status == task.status;
+        if (getId() == task.getId()) return true;
+        return Objects.equals(getTitle(), task.getTitle()) && type == task.type && Objects.equals(getDescription(), task.getDescription()) && getStatus() == task.getStatus();
     }
 
     @Override
     public int hashCode() {
-        int hash = 17;
-        if (title != null) {
-            hash = hash + title.hashCode();
-        }
-        hash = hash * 31;
-
-        if (description != null) {
-            hash = hash + description.hashCode();
-        }
-        return hash;
+        return Objects.hash(getTitle(), type, getDescription(), getStatus());
     }
 
     @Override
     public String toString() {
-        return "Task{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+        return String.format("%d,%s,%s,%s,%s",id,type,title,status,description);
     }
 }
