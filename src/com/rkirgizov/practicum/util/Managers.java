@@ -25,6 +25,7 @@ public class Managers {
         HistoryManager<Task> historyManager = getHistoryManager();
         return FileBackedTaskManagerImpl.loadFromFile(historyManager, dataFile);
     }
+
     private static HistoryManager<Task> getHistoryManager() {
         return new HistoryManagerImpl<>();
     }
