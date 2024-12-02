@@ -7,7 +7,6 @@ import com.rkirgizov.practicum.model.Task;
 import com.rkirgizov.practicum.service.TaskManager;
 import com.rkirgizov.practicum.util.Managers;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
