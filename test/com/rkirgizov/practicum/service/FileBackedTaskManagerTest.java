@@ -7,15 +7,53 @@ import com.rkirgizov.practicum.model.Task;
 import com.rkirgizov.practicum.util.Managers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskManagerTest {
+public class FileBackedTaskManagerTest {
     private static TaskManager taskManager;
+    Path path;
+
 
     @BeforeEach
-    void getManagers(){
-        taskManager = Managers.getDefault();
+    void getManagers() throws IOException {
+        path = File.createTempFile("data", null).toPath();
+        taskManager = Managers.getFileBackedTaskManagerEmpty(path);
+    }
+
+    @Test
+    void workingWithDataFileCorrect() {
+        // Создание и сохранение задач
+        Task task1 = new Task("Test Task 1", "Test Task Description");
+        taskManager.createTask(task1);
+        Task task2 = new Task("Test Task 2", "Test Task Description");
+        taskManager.createTask(task2);
+        Task task3 = new Task("Test Task 3", "Test Task Description");
+        taskManager.createTask(task3);
+        // Проверка загрузки из заполненного файла
+        TaskManager taskManagerSavedFilled = Managers.getFileBackedTaskManagerSaved(path);
+
+        assertNotNull(taskManagerSavedFilled, "Менеджер не создался при загрузке из заполненного файла.");
+
+        final List<Task> tasksFilled = taskManagerSavedFilled.getAllTasks();
+
+        assertNotNull(tasksFilled, "Список задач не возвращается при загрузке из заполненного файла.");
+        assertEquals(3, tasksFilled.size(), "Неверное количество задач в списке из заполненного файла.");
+
+        // Проверка сохранения пустого файла и его загрузки
+        taskManager.removeAllTasks();
+        TaskManager taskManagerSavedEmpty = Managers.getFileBackedTaskManagerSaved(path);
+
+        assertNotNull(taskManagerSavedEmpty, "Менеджер не создался при загрузке из пустого файла.");
+
+        final List<Task> tasksEmpty = taskManagerSavedEmpty.getAllTasks();
+
+        assertNotNull(tasksEmpty, "Список задач не возвращается при загрузке из пустого файла.");
+        assertEquals(0, tasksEmpty.size(), "Неверное количество задач в списке из пустого файла.");
     }
 
     @Test
@@ -119,7 +157,7 @@ public class TaskManagerTest {
         Epic epic2 = new Epic("Test Epic 2", "Test Epic Description");
         taskManager.createEpic(epic2);
         SubTask subTask3 = new SubTask("Test SubTask 3", "Test SubTask Description", epic2.getId());
-        taskManager.createSubTask(subTask1);
+        taskManager.createSubTask(subTask3);
         SubTask subTask4 = new SubTask("Test SubTask 2", "Test SubTask Description", epic2.getId());
         taskManager.createSubTask(subTask4);
 

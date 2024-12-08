@@ -6,15 +6,23 @@ import com.rkirgizov.practicum.model.SubTask;
 import com.rkirgizov.practicum.model.Task;
 import com.rkirgizov.practicum.service.TaskManager;
 import com.rkirgizov.practicum.util.Managers;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
 
-        TaskManager taskManager = Managers.getDefault();
+//        TaskManager taskManager = Managers.getDefault();
+        // Пишем в файл без учёта предыдущих данных
+        Path dataFile = Paths.get("src/com/rkirgizov/practicum/data/dataFile.csv");
+        TaskManager taskManager = Managers.getFileBackedTaskManagerEmpty(dataFile);
+
         System.out.println("Начинаем тестирование!");
         System.out.println(" ");
+
 
         // Тесты
 
@@ -22,7 +30,7 @@ public class Main {
         // Задачи
         Task task1 = new Task("Прочитать книгу", "Прочитать какую-нибудь книгу на досуге");
         taskManager.createTask(task1);
-        Task task2 = new Task("Проверить лампочки", "Проверить и, при необходимости, поменять лампочки в гараже");
+        Task task2 = new Task("Проверить лампочки", "Проверить и поменять лампочки в гараже");
         taskManager.createTask(task2);
         // Эпик с двумя подзадачами
         Epic epic1 = new Epic("Выбраться на природу", "Организоваться и выбраться с друзьями куда-нибудь на природу");
@@ -34,7 +42,7 @@ public class Main {
         // Эпик с одной подзадачей
         Epic epic2 = new Epic("Саморазвиться", "Пора взять себя в руки");
         taskManager.createEpic(epic2);
-        SubTask subTask3 = new SubTask("Первым делом", "Так, надо придумать чем заняться, чтобы и не грустно, и полезно", epic2.getId());
+        SubTask subTask3 = new SubTask("Первым делом", "Придумать полезное дело", epic2.getId());
         taskManager.createSubTask(subTask3);
 
         // Распечатайте списки эпиков, задач и подзадач
@@ -75,6 +83,11 @@ public class Main {
         System.out.println(" ");
 
         printHistory(taskManager);
+        System.out.println(" ");
+
+        System.out.println("Актуальное содержание списка задач:");
+        printAllTasks(taskManager);
+        printAllEpics(taskManager);
         System.out.println(" ");
 
         System.out.println("Тестирование завершено!");
