@@ -45,7 +45,9 @@ public class SubTask extends Task {
     @Override
     public String toString() {
         String strStartTime = "";
-        if (startTime != null) { strStartTime = startTime.toString();}
+        if (startTime != null) {
+            strStartTime = startTime.toString();
+        }
         return String.format("%d,%s,%s,%s,%s,%s,%s,%s",id,type,title,status,description,duration.toMinutes(),strStartTime,epicId);
     }
 }
