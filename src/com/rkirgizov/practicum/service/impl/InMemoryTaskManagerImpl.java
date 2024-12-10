@@ -261,7 +261,7 @@ public class InMemoryTaskManagerImpl implements TaskManager {
     }
 
     public void addPriorityTask(Task task) {
-        if (task.getStartTime() != null){
+        if (task.getStartTime() != null) {
             prioritizedTasks.add(task);
         }
     }
