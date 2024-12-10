@@ -30,6 +30,11 @@ public class HistoryManagerImpl<T extends Task> implements HistoryManager<T> {
     }
 
     @Override
+    public void clear() {
+        history.clear();
+    }
+
+    @Override
     public List<T> getHistory() {
         return getTasks();
     }

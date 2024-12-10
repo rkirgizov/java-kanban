@@ -12,6 +12,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +104,7 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
         list.addAll(getAllSubtasks());
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(dataFile.toFile(), StandardCharsets.UTF_8,false))) {
-            bufferedWriter.write("id,type,name,status,description,epic\n");
+            bufferedWriter.write("id,type,name,status,description,duration,startTime,epic\n");
             for (Task task : list) {
                 if (task.getType() != Type.SUBTASK) {
                     bufferedWriter.write(task + ",\n");
@@ -115,47 +117,43 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
         }
     }
 
-    public static FileBackedTaskManagerImpl loadFromFile(HistoryManager<Task> historyManager, Path file) {
+    public static FileBackedTaskManagerImpl loadFromFile(HistoryManager<Task> historyManager, Path file) throws IOException {
         FileBackedTaskManagerImpl fileBackedTaskManager = new FileBackedTaskManagerImpl(historyManager, file);
 
-        try {
-            String data = Files.readString(file);
-            if (data.isEmpty()) {
-                return fileBackedTaskManager;
+        String data = Files.readString(file);
+        if (data.isEmpty()) {
+            return fileBackedTaskManager;
+        }
+        String[] dataArray = data.split("\n");
+        for (int i = 1; i < dataArray.length; i++) {
+            Task task = fileBackedTaskManager.fromString(dataArray[i]);
+            if (task == null) {
+                continue;
             }
-            String[] dataArray = data.split("\n");
-            for (int i = 1; i < dataArray.length; i++) {
-                Task task = fileBackedTaskManager.fromString(dataArray[i]);
-                if (task == null) {
-                    continue;
-                }
-                if (task.getType() == Type.TASK) {
-                    fileBackedTaskManager.tasks.put(task.getId(), task);
-                } else if (task.getType() == Type.EPIC) {
-                    fileBackedTaskManager.epics.put(task.getId(), (Epic) task);
-                } else {
-                    fileBackedTaskManager.subTasks.put(task.getId(), (SubTask) task);
-                }
+            if (task.getType() == Type.TASK) {
+                fileBackedTaskManager.tasks.put(task.getId(), task);
+            } else if (task.getType() == Type.EPIC) {
+                fileBackedTaskManager.epics.put(task.getId(), (Epic) task);
+            } else {
+                fileBackedTaskManager.subTasks.put(task.getId(), (SubTask) task);
             }
-        } catch (IOException exception) {
-            System.out.println("Ошибка при чтении файла.");
         }
         return fileBackedTaskManager;
     }
 
     private Task fromString(String value) {
         String[] values = value.split(",");
-        Status status = Status.valueOf(values[3]);
         Type type = Type.valueOf(values[1]);
-        switch (type) {
-            case TASK:
-                return new Task(Integer.parseInt(values[0]), values[2], values[4], status);
-            case EPIC:
-                return new Epic(Integer.parseInt(values[0]), values[2], values[4], status);
-            case SUBTASK:
-                return new SubTask(Integer.parseInt(values[0]), values[2], values[4], status,Integer.parseInt(values[5]));
-        }
-        return null;
+        Duration duration = Duration.ofMinutes(Integer.parseInt(values[5]));
+        LocalDateTime startTime = LocalDateTime.parse(values[6]);
+        Status status = Status.valueOf(values[3]);
+
+        return switch (type) {
+            case TASK -> new Task(Integer.parseInt(values[0]), values[2], values[4], duration, startTime, status);
+            case EPIC -> new Epic(Integer.parseInt(values[0]), values[2], values[4], duration, startTime, status);
+            case SUBTASK ->
+                    new SubTask(Integer.parseInt(values[0]), values[2], values[4], duration, startTime, status, Integer.parseInt(values[5]));
+        };
     }
 
 }
