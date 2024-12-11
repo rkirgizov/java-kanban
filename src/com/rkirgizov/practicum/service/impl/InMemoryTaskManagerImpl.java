@@ -228,36 +228,14 @@ public class InMemoryTaskManagerImpl implements TaskManager {
         epic.setEndTime(epicEndTime);
 
         // Update status
-        // Как использовать тут Stream API так и не понял
-        // Был вариант такой, но до ума не смог довести
-//        epic.setStatus(subTasksForCheck.stream()
-//                .map(SubTask::getStatus)
-//                .filter(status -> status == Status.IN_PROGRESS)
-//                .findAny()
-//                .map(status -> Status.IN_PROGRESS)
-//                .orElseGet(() -> subTasksForCheck.stream()
-//                        .allMatch(subTask -> subTask.getStatus() == Status.DONE) ? Status.DONE : Status.IN_PROGRESS));
-        boolean isDone = true;
-        boolean isNew = true;
-        for (SubTask subTask : subTasksForCheck) {
-            if (subTask.getStatus() == Status.IN_PROGRESS) {
-                epic.setStatus(Status.IN_PROGRESS);
-                return;
-            }
-            if (subTask.getStatus() != Status.DONE) {
-                isDone = false;
-            } else if (subTask.getStatus() != Status.NEW) {
-                isNew = false;
-            }
-        }
+        // Пока нашёл только такой вариант для Stream API
+        Optional<Status> optionalStatus = subTasksForCheck.stream()
+                .allMatch(subTask -> subTask.getStatus() == Status.NEW) ? Optional.of(Status.NEW) : (Optional<Status>) Optional.empty()
+                .orElse(subTasksForCheck.stream()
+                        .allMatch(subTask -> subTask.getStatus() == Status.DONE) ? Optional.of(Status.DONE) : Optional.empty());
 
-        if (isDone) {
-            epic.setStatus(Status.DONE);
-        } else if (isNew) {
-            epic.setStatus(Status.NEW);
-        } else {
-            epic.setStatus(Status.IN_PROGRESS);
-        }
+        epic.setStatus(optionalStatus.orElse(Status.IN_PROGRESS));
+
     }
 
     public void addPriorityTask(Task task) {
