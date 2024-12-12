@@ -7,6 +7,7 @@ import com.rkirgizov.practicum.service.impl.FileBackedTaskManagerImpl;
 import com.rkirgizov.practicum.service.impl.HistoryManagerImpl;
 import com.rkirgizov.practicum.service.impl.InMemoryTaskManagerImpl;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class Managers {
@@ -21,7 +22,7 @@ public class Managers {
         return new FileBackedTaskManagerImpl(historyManager, dataFile);
     }
 
-    public static TaskManager getFileBackedTaskManagerSaved(Path dataFile) {
+    public static TaskManager getFileBackedTaskManagerSaved(Path dataFile) throws IOException {
         HistoryManager<Task> historyManager = getHistoryManager();
         return FileBackedTaskManagerImpl.loadFromFile(historyManager, dataFile);
     }
