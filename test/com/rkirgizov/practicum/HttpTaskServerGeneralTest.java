@@ -7,7 +7,6 @@ import com.rkirgizov.practicum.http.adapt.DurationAdapter;
 import com.rkirgizov.practicum.http.adapt.LocalDateTimeAdapter;
 import com.rkirgizov.practicum.model.Task;
 import com.rkirgizov.practicum.service.TaskManager;
-import com.rkirgizov.practicum.service.exc.ManagerNotFoundException;
 import com.rkirgizov.practicum.util.Managers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +29,7 @@ public class HttpTaskServerGeneralTest {
     private static TaskManager taskManager;
     private static Gson gson;
     private static HttpTaskServer server;
-    private static HttpClient client;;
+    private static HttpClient client;
 
     private static class TaskListTypeToken extends TypeToken<List<Task>> {
         // здесь ничего не нужно реализовывать

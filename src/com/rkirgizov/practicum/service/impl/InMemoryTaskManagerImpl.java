@@ -1,7 +1,6 @@
 package com.rkirgizov.practicum.service.impl;
 
 import com.rkirgizov.practicum.dict.Status;
-import com.rkirgizov.practicum.dict.Type;
 import com.rkirgizov.practicum.service.exc.ManagerNotFoundException;
 import com.rkirgizov.practicum.model.Epic;
 import com.rkirgizov.practicum.model.SubTask;

@@ -183,9 +183,7 @@ public class HttpTaskServerSubTasksTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode(), "Статус ответа сервера не 200.");
-        assertThrows(ManagerNotFoundException.class, () -> {
-            taskManager.getSubtaskById(subTaskId);
-        },"Задача не удалилась по id из менеджера.");
+        assertThrows(ManagerNotFoundException.class, () -> taskManager.getSubtaskById(subTaskId),"Задача не удалилась по id из менеджера.");
     }
 
 }

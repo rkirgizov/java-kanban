@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class TaskManagerTest<T extends TaskManager> {
+abstract class TaskManagerTest {
     private final DateTimeFormatter startDateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     void addingTaskWorkCorrect(TaskManager taskManager) {
@@ -28,9 +28,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task task2 = new Task("Test Task 2", "Test Task 2 Description",
                 Duration.ofMinutes(30), LocalDateTime.parse("01.01.2025 11:50", startDateTimeFormatter));
 
-        assertThrows(ManagerOverlappingException.class, () -> {
-            taskManager.createTask(task2);
-        },"Задача создана с пересечением по времени.");
+        assertThrows(ManagerOverlappingException.class, () -> taskManager.createTask(task2),"Задача создана с пересечением по времени.");
 
         final List<Task> tasks = taskManager.getAllTasks();
 
@@ -119,9 +117,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         taskManager.removeTaskById(taskId);
 
-        assertThrows(ManagerNotFoundException.class, () -> {
-            taskManager.getTaskById(taskId);
-        },"Задача не удалилась из менеджера.");
+        assertThrows(ManagerNotFoundException.class, () -> taskManager.getTaskById(taskId),"Задача не удалилась из менеджера.");
 
         taskManager.removeAllTasks();
 
@@ -139,9 +135,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         int subTask1Id = subTask1.getId();
         taskManager.removeSubTaskById(subTask1Id);
 
-        assertThrows(ManagerNotFoundException.class, () -> {
-            taskManager.getSubtaskById(subTask1Id);
-        },"Подзадача не удалилась из менеджера.");
+        assertThrows(ManagerNotFoundException.class, () -> taskManager.getSubtaskById(subTask1Id),"Подзадача не удалилась из менеджера.");
 
         taskManager.removeAllSubTasks();
 
@@ -159,9 +153,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         int epic1Id = epic1.getId();
         taskManager.removeEpicById(epic1Id);
 
-        assertThrows(ManagerNotFoundException.class, () -> {
-            taskManager.getEpicById(epic1Id);
-        },"Эпик не удалился из менеджера.");
+        assertThrows(ManagerNotFoundException.class, () -> taskManager.getEpicById(epic1Id),"Эпик не удалился из менеджера.");
 
         taskManager.removeAllEpics();
 

@@ -4,11 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rkirgizov.practicum.http.adapt.DurationAdapter;
 import com.rkirgizov.practicum.http.adapt.LocalDateTimeAdapter;
-import com.rkirgizov.practicum.dict.Status;
 import com.rkirgizov.practicum.http.handl.*;
-import com.rkirgizov.practicum.model.Epic;
-import com.rkirgizov.practicum.model.SubTask;
-import com.rkirgizov.practicum.model.Task;
 import com.rkirgizov.practicum.service.TaskManager;
 import com.rkirgizov.practicum.util.Managers;
 import com.sun.net.httpserver.HttpServer;
@@ -19,8 +15,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Scanner;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;

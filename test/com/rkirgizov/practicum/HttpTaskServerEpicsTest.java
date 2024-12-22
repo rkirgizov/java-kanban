@@ -163,9 +163,7 @@ public class HttpTaskServerEpicsTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode(), "Статус ответа сервера не 200.");
-        assertThrows(ManagerNotFoundException.class, () -> {
-            taskManager.getEpicById(epicId);
-        },"Эпик не удалялся по id из менеджера.");
+        assertThrows(ManagerNotFoundException.class, () -> taskManager.getEpicById(epicId),"Эпик не удалялся по id из менеджера.");
     }
 
 }
