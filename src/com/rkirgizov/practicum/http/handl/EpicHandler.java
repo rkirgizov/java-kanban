@@ -48,7 +48,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                 case "POST":
                     String body = new String(exchange.getRequestBody().readAllBytes());
                     JsonElement jsonElement = JsonParser.parseString(body);
-                    if(!jsonElement.isJsonObject()) { // проверяем, точно ли мы получили JSON-объект
+                    if (!jsonElement.isJsonObject()) { // проверяем, точно ли мы получили JSON-объект
                         sendText(exchange, "Полученное сообщение не является JSON-объектом.", 400);
                         break;
                     }
