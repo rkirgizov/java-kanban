@@ -40,7 +40,7 @@ public interface TaskManager {
 
     void removeAllEpics();
 
-    Epic getEpicById (int id);
+    Epic getEpicById(int id);
 
     void createEpic(Epic epic);
 
