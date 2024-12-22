@@ -26,14 +26,14 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
     }
 
     @Override
-    public void removeSubTask(SubTask subTask) {
-        super.removeSubTask(subTask);
+    public void removeSubTaskById(int id) {
+        super.removeSubTaskById(id);
         save();
     }
 
     @Override
-    public void updateSubtask(SubTask subTask) {
-        super.updateSubtask(subTask);
+    public void updateSubTask(SubTask subTask) {
+        super.updateSubTask(subTask);
         save();
     }
 
@@ -50,8 +50,8 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
     }
 
     @Override
-    public void removeEpic(Epic epic) {
-        super.removeEpic(epic);
+    public void removeEpicById(int id) {
+        super.removeEpicById(id);
         save();
     }
 
@@ -74,8 +74,8 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
     }
 
     @Override
-    public void removeTask(Task task) {
-        super.removeTask(task);
+    public void removeTaskById(int id) {
+        super.removeTaskById(id);
         save();
     }
 
@@ -99,9 +99,9 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
 
     private void save() {
         List<Task> list = new ArrayList<>();
-        list.addAll(getAllTasks());
-        list.addAll(getAllEpics());
-        list.addAll(getAllSubtasks());
+        list.addAll(tasks.values());
+        list.addAll(epics.values());
+        list.addAll(subTasks.values());
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(dataFile.toFile(), StandardCharsets.UTF_8,false))) {
             bufferedWriter.write("id,type,name,status,description,duration,startTime,epic\n");

@@ -4,6 +4,8 @@ import com.rkirgizov.practicum.dict.Status;
 import com.rkirgizov.practicum.model.Epic;
 import com.rkirgizov.practicum.model.SubTask;
 import com.rkirgizov.practicum.model.Task;
+import com.rkirgizov.practicum.service.exc.ManagerNotFoundException;
+import com.rkirgizov.practicum.service.exc.ManagerOverlappingException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -11,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 abstract class TaskManagerTest<T extends TaskManager> {
     private final DateTimeFormatter startDateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
@@ -26,9 +27,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         Task task2 = new Task("Test Task 2", "Test Task 2 Description",
                 Duration.ofMinutes(30), LocalDateTime.parse("01.01.2025 11:50", startDateTimeFormatter));
-        taskManager.createTask(task2);
 
-        assertNull(taskManager.getTaskById(task2.getId()), "Пересекающаяся по времени задача добавлена в менеджер.");
+        assertThrows(ManagerOverlappingException.class, () -> {
+            taskManager.createTask(task2);
+        },"Задача создана с пересечением по времени.");
 
         final List<Task> tasks = taskManager.getAllTasks();
 
@@ -89,18 +91,18 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertEquals(Status.NEW, taskManager.getEpicById(epic1.getId()).getStatus(), "Статус эпика не NEW при двух подзадачах NEW.");
 
-        taskManager.updateSubtask(new SubTask(subTask1.getId(), subTask1.getTitle(), subTask1.getDescription(),
+        taskManager.updateSubTask(new SubTask(subTask1.getId(), subTask1.getTitle(), subTask1.getDescription(),
                 Duration.ofMinutes(10), LocalDateTime.parse("02.01.2025 12:00", startDateTimeFormatter), Status.DONE, subTask1.getEpicId()));
 
         assertEquals(Status.DONE, taskManager.getSubtaskById(subTask1.getId()).getStatus(), "Подзадача не обновилась с новым статусом.");
         assertEquals(Status.IN_PROGRESS, taskManager.getEpicById(epic1.getId()).getStatus(), "Статус эпика не IN_PROGRESS при подзадачах NEW и DONE.");
 
-        taskManager.updateSubtask(new SubTask(subTask2.getId(), subTask2.getTitle(), subTask2.getDescription(),
-                Duration.ofMinutes(10), LocalDateTime.parse("02.01.2025 12:00", startDateTimeFormatter), Status.IN_PROGRESS, subTask2.getEpicId()));
+        taskManager.updateSubTask(new SubTask(subTask2.getId(), subTask2.getTitle(), subTask2.getDescription(),
+                Duration.ofMinutes(10), LocalDateTime.parse("03.01.2025 12:00", startDateTimeFormatter), Status.IN_PROGRESS, subTask2.getEpicId()));
 
         assertEquals(Status.IN_PROGRESS, taskManager.getEpicById(epic1.getId()).getStatus(), "Статус эпика не IN_PROGRESS при подзадачах IN_PROGRESS и DONE.");
 
-        taskManager.updateSubtask(new SubTask(subTask2.getId(), subTask2.getTitle(), subTask2.getDescription(),
+        taskManager.updateSubTask(new SubTask(subTask2.getId(), subTask2.getTitle(), subTask2.getDescription(),
                 Duration.ofMinutes(10), LocalDateTime.parse("03.01.2025 12:00", startDateTimeFormatter), Status.DONE, subTask2.getEpicId()));
 
         assertEquals(Status.DONE, taskManager.getEpicById(epic1.getId()).getStatus(), "Статус эпика не DONE при двух подзадачах DONE.");
@@ -115,8 +117,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 Duration.ofMinutes(10), LocalDateTime.parse("02.01.2025 12:00", startDateTimeFormatter));
         taskManager.createTask(task2);
 
-        taskManager.removeTask(task1);
-        assertNull(taskManager.getTaskById(taskId), "Задача не удалилась из менеджера.");
+        taskManager.removeTaskById(taskId);
+
+        assertThrows(ManagerNotFoundException.class, () -> {
+            taskManager.getTaskById(taskId);
+        },"Задача не удалилась из менеджера.");
+
         taskManager.removeAllTasks();
 
         assertEquals(0, taskManager.getAllTasks().size(), "Не все задачи удалились из менеджера.");
@@ -131,9 +137,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(subTask2);
 
         int subTask1Id = subTask1.getId();
-        taskManager.removeSubTask(subTask1);
+        taskManager.removeSubTaskById(subTask1Id);
 
-        assertNull(taskManager.getSubtaskById(subTask1Id), "Подзадача не удалена из менеджера.");
+        assertThrows(ManagerNotFoundException.class, () -> {
+            taskManager.getSubtaskById(subTask1Id);
+        },"Подзадача не удалилась из менеджера.");
 
         taskManager.removeAllSubTasks();
 
@@ -149,9 +157,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(subTask4);
 
         int epic1Id = epic1.getId();
-        taskManager.removeEpic(epic1);
+        taskManager.removeEpicById(epic1Id);
 
-        assertNull(taskManager.getEpicById(epic1Id), "Эпик не удалён.");
+        assertThrows(ManagerNotFoundException.class, () -> {
+            taskManager.getEpicById(epic1Id);
+        },"Эпик не удалился из менеджера.");
 
         taskManager.removeAllEpics();
 
