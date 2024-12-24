@@ -83,11 +83,10 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                 case "DELETE":
                     // Удаление всех задач пока не реализуем
                     if (taskId.isPresent()) {
-                        try {
-                            taskManager.removeTaskById(taskId.get());
+                        if (taskManager.removeTaskById(taskId.get())) {
                             sendText(exchange, "Задача с Id " + taskId.get() + " успешно удалена.", 200);
-                        } catch (ManagerNotFoundException e) {
-                            sendNotFound(exchange, e.getMessage());
+                        } else {
+                            sendNotFound(exchange, "Задача с Id " + taskId.get() + " не найдена.");
                         }
                     } else {
                         sendText(exchange, "Не указан Id задачи для удаления.", 405);

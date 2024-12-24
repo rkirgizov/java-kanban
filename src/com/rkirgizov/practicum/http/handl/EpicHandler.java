@@ -67,11 +67,10 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
                 case "DELETE":
                     // Удаление всех эпиков пока не реализуем
                     if (epicId.isPresent()) {
-                        try {
-                            taskManager.removeEpicById(epicId.get());
+                        if (taskManager.removeEpicById(epicId.get())) {
                             sendText(exchange, "Эпик с Id " + epicId.get() + " успешно удалён.", 200);
-                        } catch (ManagerNotFoundException e) {
-                            sendNotFound(exchange, e.getMessage());
+                        } else {
+                            sendNotFound(exchange, "Эпик с Id " + epicId.get() + " не найден.");
                         }
                     } else {
                         sendText(exchange, "Не указан Id эпика для удаления.", 405);

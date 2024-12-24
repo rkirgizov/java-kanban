@@ -84,11 +84,10 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                 case "DELETE":
                     // Удаление всех задач пока не реализуем
                     if (subTaskId.isPresent()) {
-                        try {
-                            taskManager.removeSubTaskById(subTaskId.get());
+                        if (taskManager.removeSubTaskById(subTaskId.get())) {
                             sendText(exchange, "Подзадача с Id " + subTaskId.get() + " успешно удалена.", 200);
-                        } catch (ManagerNotFoundException e) {
-                            sendNotFound(exchange, e.getMessage());
+                        } else {
+                            sendNotFound(exchange, "Подзадача с Id " + subTaskId.get() + " не найдена.");
                         }
                     } else {
                         sendText(exchange, "Не указан Id подзадачи для удаления.", 405);

@@ -95,14 +95,15 @@ public class InMemoryTaskManagerImpl implements TaskManager {
     }
 
     @Override
-    public void removeTaskById(int id) {
-        if (!tasks.containsKey(id)) {
-            throw new ManagerNotFoundException("Задача c Id " + id + " не найдена!");
+    public boolean removeTaskById(int id) {
+        if (tasks.containsKey(id)) {
+            removePriorityTask(tasks.get(id));
+            historyManager.remove(id);
+            tasks.remove(id);
+            return true;
+        } else {
+            return false;
         }
-        Task task = tasks.get(id);
-        removePriorityTask(task);
-        historyManager.remove(task.getId());
-        tasks.remove(task.getId());
     }
 
     // Методы Epic
@@ -150,20 +151,22 @@ public class InMemoryTaskManagerImpl implements TaskManager {
     }
 
     @Override
-    public void removeEpicById(int id) {
-        if (!epics.containsKey(id)) {
-            throw new ManagerNotFoundException("Эпик c Id " + id + " не найден!");
+    public boolean removeEpicById(int id) {
+        if (epics.containsKey(id)) {
+            Epic epic = epics.get(id);
+            epic.getSubTasksId().stream()
+                    .map(subTasks::get)
+                    .forEach(subTask -> {
+                        removePriorityTask(subTask);
+                        historyManager.remove(subTask.getId());
+                        subTasks.remove(subTask.getId());
+                    });
+            historyManager.remove(id);
+            epics.remove(id);
+            return true;
+        } else {
+            return false;
         }
-        Epic epic = epics.get(id);
-        epic.getSubTasksId().stream()
-                .map(subTasks::get)
-                .forEach(subTask -> {
-                    removePriorityTask(subTask);
-                    historyManager.remove(subTask.getId());
-                    subTasks.remove(subTask.getId());
-                });
-        historyManager.remove(epic.getId());
-        epics.remove(epic.getId());
     }
 
     @Override
@@ -242,18 +245,20 @@ public class InMemoryTaskManagerImpl implements TaskManager {
     }
 
     @Override
-    public void removeSubTaskById(int id) {
-        if (!subTasks.containsKey(id)) {
-            throw new ManagerNotFoundException("Подзадача c Id " + id + " не найдена!");
+    public boolean removeSubTaskById(int id) {
+        if (subTasks.containsKey(id)) {
+            SubTask subTask = subTasks.get(id);
+            int epicId = subTask.getEpicId();
+            Epic epic = epics.get(epicId);
+            epic.getSubTasksId().remove(Integer.valueOf(id));
+            removePriorityTask(subTask);
+            historyManager.remove(id);
+            subTasks.remove(id);
+            updateEpicBySubTasks(epicId);
+            return true;
+        } else {
+            return false;
         }
-        SubTask subTask = subTasks.get(id);
-        int epicId = subTask.getEpicId();
-        Epic epic = epics.get(epicId);
-        epic.getSubTasksId().remove(Integer.valueOf(subTask.getId()));
-        removePriorityTask(subTask);
-        historyManager.remove(subTask.getId());
-        subTasks.remove(subTask.getId());
-        updateEpicBySubTasks(epicId);
     }
 
     private void updateEpicBySubTasks(int epicId) {
