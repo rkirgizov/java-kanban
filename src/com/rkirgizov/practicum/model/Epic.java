@@ -24,7 +24,7 @@ public class Epic extends Task {
         subTasksId = new ArrayList<>();
     }
 
-    // Перегрузка конструктора для обновления
+    // Перегрузка конструктора для истории
     public Epic(int epicId, String title, String description, Duration duration, LocalDateTime startTime, Status status, List<Integer> subTasksId) {
         super(epicId, title, description, duration, startTime, status);
         this.type = Type.EPIC;

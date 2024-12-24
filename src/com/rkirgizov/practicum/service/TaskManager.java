@@ -10,7 +10,7 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
-    Set<Task> getPrioritizedTasks();
+    Set<?> getPrioritizedTasks();
 
     List<Task> getAllTasks();
 
@@ -22,7 +22,7 @@ public interface TaskManager {
 
     void updateTask(Task task);
 
-    void removeTask(Task task);
+    boolean removeTaskById(int id);
 
     List<SubTask> getAllSubtasks();
 
@@ -32,9 +32,9 @@ public interface TaskManager {
 
     void createSubTask(SubTask subTask);
 
-    void updateSubtask(SubTask subTask);
+    void updateSubTask(SubTask subTask);
 
-    void removeSubTask(SubTask subTask);
+    boolean removeSubTaskById(int id);
 
     List<Epic> getAllEpics();
 
@@ -46,7 +46,7 @@ public interface TaskManager {
 
     void updateEpic(Epic epic);
 
-    void removeEpic(Epic epic);
+    boolean removeEpicById(int id);
 
     List<SubTask> getAllSubtasksOfEpic(int id);
 

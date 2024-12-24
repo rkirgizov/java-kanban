@@ -53,15 +53,15 @@ public class HistoryManagerTest {
 
         assertEquals(11, taskManager.getHistory().size(), "В истории больше просмотров, чем задач в менеджере (дублирование задач в истории).");
 
-        taskManager.removeTask(taskManager.getHistory().getFirst());
+        taskManager.removeTaskById(taskManager.getHistory().getFirst().getId());
 
         assertEquals(10, taskManager.getHistory().size(), "Задача не удалена из начала истории.");
 
-        taskManager.removeTask(taskManager.getHistory().get(5));
+        taskManager.removeTaskById(taskManager.getHistory().get(5).getId());
 
         assertEquals(9, taskManager.getHistory().size(), "Задача не удалена из середины истории.");
 
-        taskManager.removeTask(taskManager.getHistory().getLast());
+        taskManager.removeTaskById(taskManager.getHistory().getLast().getId());
 
         assertEquals(8, taskManager.getHistory().size(), "Задача не удалена из конца истории.");
 
