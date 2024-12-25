@@ -26,14 +26,18 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
     }
 
     @Override
-    public void removeSubTask(SubTask subTask) {
-        super.removeSubTask(subTask);
-        save();
+    public boolean removeSubTaskById(int id) {
+        if (super.removeSubTaskById(id)) {
+            save();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public void updateSubtask(SubTask subTask) {
-        super.updateSubtask(subTask);
+    public void updateSubTask(SubTask subTask) {
+        super.updateSubTask(subTask);
         save();
     }
 
@@ -50,9 +54,13 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
     }
 
     @Override
-    public void removeEpic(Epic epic) {
-        super.removeEpic(epic);
-        save();
+    public boolean removeEpicById(int id) {
+        if (super.removeEpicById(id)) {
+            save();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -74,9 +82,13 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
     }
 
     @Override
-    public void removeTask(Task task) {
-        super.removeTask(task);
-        save();
+    public boolean removeTaskById(int id) {
+        if (super.removeTaskById(id)) {
+            save();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -99,9 +111,9 @@ public class FileBackedTaskManagerImpl extends InMemoryTaskManagerImpl {
 
     private void save() {
         List<Task> list = new ArrayList<>();
-        list.addAll(getAllTasks());
-        list.addAll(getAllEpics());
-        list.addAll(getAllSubtasks());
+        list.addAll(tasks.values());
+        list.addAll(epics.values());
+        list.addAll(subTasks.values());
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(dataFile.toFile(), StandardCharsets.UTF_8,false))) {
             bufferedWriter.write("id,type,name,status,description,duration,startTime,epic\n");
